@@ -7,9 +7,9 @@ def add_new_user(name, email):
     else:
         return f"User with email {email} already exists."
 
-def add_new_transaction(user_id, category_id, amount, description=None):
-    models.create_transaction(user_id, category_id, amount, description)
-    return f"Transaction of {amount} added!"
+def add_new_expense(user_id, category_id, amount, description=None):
+    models.create_expense(user_id, category_id, amount, description)
+    return f"expense of {amount} added!"
 
 def find_user(email):
     user = models.get_user_by_email(email)
@@ -30,17 +30,17 @@ def add_new_category(name, type_):
         print(f"Category '{name}' already exists.")
 
 
-def list_user_transactions(user_id):
-    transactions = models.get_transactions_by_user(user_id)
-    if not transactions:
-        return "No transactions found."
-    return transactions
+def list_user_expenses(user_id):
+    expenses = models.get_expenses_by_user(user_id)
+    if not expenses:
+        return "No expenses found."
+    return expenses
 
-def list_user_transactions_filtered(user_id, start_date=None, end_date=None, category_id=None):
-    transactions = models.get_transactions_by_user_filtered(user_id, start_date, end_date, category_id)
-    if not transactions:
-        return "No transactions found."
-    return transactions
+def list_user_expenses_filtered(user_id, start_date=None, end_date=None, category_id=None):
+    expenses = models.get_expenses_by_user_filtered(user_id, start_date, end_date, category_id)
+    if not expenses:
+        return "No expenses found."
+    return expenses
 
 def get_user_summary(user_id):
     income = models.get_total_by_type(user_id, 'income')
@@ -52,7 +52,7 @@ def get_user_summary(user_id):
         "balance": balance
     }
 
-def add_new_transaction(user_id, category_id, amount, description):
+def add_new_expense(user_id, category_id, amount, description):
     # Validate user
     if not models.user_exists(user_id):
         return f"Error: User ID {user_id} does not exist."
@@ -63,7 +63,7 @@ def add_new_transaction(user_id, category_id, amount, description):
     
     # Validate amount
     if amount <= 0:
-        return "Error: Transaction amount must be positive."
+        return "Error: expense amount must be positive."
     
-    # Everything is valid, create transaction
-    return models.create_transaction(user_id, category_id, amount, description)
+    # Everything is valid, create expense
+    return models.create_expense(user_id, category_id, amount, description)

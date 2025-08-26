@@ -59,56 +59,56 @@ def get_all_categories():
     return categories
 
 
-def create_transaction(user_id, category_id, amount, description=None):
+def create_expense(user_id, category_id, amount, description=None):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO Transactions (user_id, category_id, amount, description) VALUES (%s, %s, %s, %s)",
+        "INSERT INTO expenses (user_id, category_id, amount, description) VALUES (%s, %s, %s, %s)",
         (user_id, category_id, amount, description),
     )
     conn.commit()
     conn.close()
 
-def get_transactions_by_user(user_id):
+def get_expenses_by_user(user_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT t.transaction_id, c.category_name, c.type, t.amount, t.transaction_date, t.description
-        FROM Transactions t
+        SELECT t.expense_id, c.category_name, c.type, t.amount, t.expense_date, t.description
+        FROM expenses t
         JOIN Categories c ON t.category_id = c.category_id
         WHERE t.user_id = %s
-        ORDER BY t.transaction_date DESC
+        ORDER BY t.expense_date DESC
     """, (user_id,))
-    transactions = cursor.fetchall()
+    expenses = cursor.fetchall()
     conn.close()
-    return transactions
+    return expenses
 
-def get_transactions_by_user_filtered(user_id, start_date=None, end_date=None, category_id=None):
+def get_expenses_by_user_filtered(user_id, start_date=None, end_date=None, category_id=None):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     query = """
-        SELECT t.transaction_id, c.category_name, c.type, t.amount, t.transaction_date, t.description
-        FROM Transactions t
+        SELECT t.expense_id, c.category_name, c.type, t.amount, t.expense_date, t.description
+        FROM expenses t
         JOIN Categories c ON t.category_id = c.category_id
         WHERE t.user_id = %s
     """
     params = [user_id]
 
     if start_date:
-        query += " AND t.transaction_date >= %s"
+        query += " AND t.expense_date >= %s"
         params.append(start_date)
     if end_date:
-        query += " AND t.transaction_date <= %s"
+        query += " AND t.expense_date <= %s"
         params.append(end_date)
     if category_id:
         query += " AND t.category_id = %s"
         params.append(category_id)
 
-    query += " ORDER BY t.transaction_date DESC"
+    query += " ORDER BY t.expense_date DESC"
     cursor.execute(query, tuple(params))
-    transactions = cursor.fetchall()
+    expenses = cursor.fetchall()
     conn.close()
-    return transactions
+    return expenses
 
 
 def get_total_by_type(user_id, type_):
@@ -116,7 +116,7 @@ def get_total_by_type(user_id, type_):
     cursor = conn.cursor()
     cursor.execute("""
         SELECT SUM(t.amount) 
-        FROM Transactions t
+        FROM expenses t
         JOIN Categories c ON t.category_id = c.category_id
         WHERE t.user_id = %s AND c.type = %s
     """, (user_id, type_))
