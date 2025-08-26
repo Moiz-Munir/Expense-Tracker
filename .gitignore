@@ -16,4 +16,5 @@ venv/
 # OS junk
 .DS_Store
 
+# Ignore accidental text files in scripts
 scripts/scripts.txt
