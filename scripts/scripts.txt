@@ -12,3 +12,6 @@ python3 scripts/cli.py --add-transaction <USER_ID> <CATEGORY_ID> <AMOUNT> "<DESC
 python3 scripts/cli.py --list-transactions <USER_ID>
 
 python3 scripts/cli.py --summary <USER_ID>
+
+python3 scripts/cli.py --list-transactions <USER_ID> --start-date YYYY-MM-DD --end-date YYYY-MM-DD --category-id <CATEGORY_ID>
+

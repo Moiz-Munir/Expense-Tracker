@@ -15,3 +15,5 @@ venv/
 
 # OS junk
 .DS_Store
+
+scripts/scripts.txt
